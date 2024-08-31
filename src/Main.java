@@ -24,25 +24,56 @@ public class Main {
 //            geoVertecies.add(new Vector3f(xOrdinal, yOrdinal, zOrdinal).scale(5f));
 //        }
         
-        double step = Math.PI / 10;
+        double step = Math.PI / 4;
         for (double latitude = 0; latitude < Math.PI * 2; latitude += step) {
-            for (double longditude = 0; longditude < Math.PI * 2; longditude += step) {
+            for (double longditude = 0; longditude < Math.PI * 2 - step; longditude += step) {
                 geoVertecies.add(new Line(new Vector3f(
                     (float) (Math.sin(longditude) * Math.cos(latitude)),
                     (float) Math.sin(latitude),
                     (float) (Math.cos(longditude) * Math.cos(latitude))
-                ).scale(5f), new Vector3f(
-                    (float) (Math.sin(longditude + step) * Math.cos(latitude + step)),
-                    (float) Math.sin(latitude + step),
-                    (float) (Math.cos(longditude + step) * Math.cos(latitude + step))
-                ).scale(5f)));
+                ).scale(20f), new Vector3f(
+                    (float) (Math.sin(longditude + step) * Math.cos(latitude)),
+                    (float) Math.sin(latitude),
+                    (float) (Math.cos(longditude + step) * Math.cos(latitude))
+                ).scale(20f)));
+                if (latitude == Math.PI/2 || latitude == Math.PI * 1.5f) break;
             }
         }
-        geoVerteciesB.addAll(geoVertecies.stream().map(v -> new Line(v.getF().scale(2f), v.getT().scale(2f))).toList());
-        geoVerteciesB.addAll(geoVertecies.stream().map(v -> new Line(v.getF().scale(1.5f), v.getT().scale(1.5f))).toList());
-        geoVerteciesB.addAll(geoVertecies.stream().map(v -> new Line(v.getF().scale(4f).mul(new Vector3f(1f, 0.1f, 1f)), v.getT().scale(4f).mul(new Vector3f(1f, 0.1f, 1f)))).toList());
-        geoVertecies.addAll(geoVerteciesB);
-//        geoVerteciesB = geoVertecies.stream().map(v -> new Line(v.getF().scale(2f), v.getT().scale(2f))).toList();
+        ;
+        for (double latitude = 0; latitude < Math.PI * 2; latitude += step) {
+            for (double longditude = 0; longditude < Math.PI * 2 - step; longditude += step) {
+                geoVertecies.add(new Line(new Vector3f(
+                    (float) Math.sin(latitude),
+                    (float) (Math.sin(longditude) * Math.cos(latitude)),
+                    (float) (Math.cos(longditude) * Math.cos(latitude))
+                ).scale(20f), new Vector3f(
+                    (float) Math.sin(latitude),
+                    (float) (Math.sin(longditude + step) * Math.cos(latitude)),
+                    (float) (Math.cos(longditude + step) * Math.cos(latitude))
+                ).scale(20f)));
+                if (latitude == Math.PI/2 || latitude == Math.PI * 1.5f) break;
+            }
+        }
+        
+        for (double latitude = 0; latitude < Math.PI * 2; latitude += step) {
+            for (double longditude = 0; longditude < Math.PI * 2 - step; longditude += step) {
+                geoVertecies.add(new Line(new Vector3f(
+                    (float) (Math.sin(longditude) * Math.cos(latitude)),
+                    (float) (Math.cos(longditude) * Math.cos(latitude)),
+                (float) Math.sin(latitude)
+                ).scale(20f), new Vector3f(
+                    (float) (Math.sin(longditude + step) * Math.cos(latitude)),
+                    (float) (Math.cos(longditude + step) * Math.cos(latitude)),
+                    (float) Math.sin(latitude)
+                ).scale(20f)));
+                if (latitude == Math.PI/2 || latitude == Math.PI * 1.5f) break;
+            }
+        }
+        
+//        geoVerteciesB.addAll(geoVertecies.stream().map(v -> new Line(v.getF().scale(2f), v.getT().scale(2f))).toList());
+//        geoVerteciesB.addAll(geoVertecies.stream().map(v -> new Line(v.getF().scale(1.5f), v.getT().scale(1.5f))).toList());
+//        geoVerteciesB.addAll(geoVertecies.stream().map(v -> new Line(v.getF().scale(4f).mul(new Vector3f(1f, 0.1f, 1f)), v.getT().scale(4f).mul(new Vector3f(1f, 0.1f, 1f)))).toList());
+//        geoVertecies.addAll(geoVerteciesB);
     }
     
     static Plotting plotting;
@@ -63,8 +94,8 @@ public class Main {
     
     private static void plotDemo(PlotStack stack, PlottingKeyListener listener) {
         
-        quaternion = quaternion.multiply(new Quaternion(-0.1f, 0.033f, 0));
-        quaternion = quaternion.multiply(new Quaternion(0, 0.1f, -0.02f));
+        quaternion = quaternion.multiply(new Quaternion(-0.01f, 0.033f, 0));
+        quaternion = quaternion.multiply(new Quaternion(0, 0.01f, -0.002f));
 //
 //        if (constrained.magnitude() > 1)
 //           constrained = constrained.scale((float) (0.99f/constrained.magnitude()));
@@ -73,17 +104,19 @@ public class Main {
         Quaternion rotation = quaternion;
         
         for (Line vertex : geoVertecies) {
-            Vector3f orientedf = rotation.rotate(Quaternion.ofCartesian(vertex.getF())).toCartesian();
-            Vector3f orientedt = rotation.rotate(Quaternion.ofCartesian(vertex.getT())).toCartesian();
+            Vector3f orientedf = rotation.rotate(Quaternion.ofCartesian(vertex.getF())).toCartesian().mul(new Vector3f(1f, 1f, 1f));
+            Vector3f orientedt = rotation.rotate(Quaternion.ofCartesian(vertex.getT())).toCartesian().mul(new Vector3f(1f, 1f, 1f));
             
             if (Math.random()  < 0.1f) {
                 
                 stack.plot(new LabeledPointPlot(orientedf, rchr()).colored(Color.RED));
                 
-            }else  {
-                
-                stack.plot(new LinePlot(orientedf, orientedt).colored(new Color((int) (Math.random() * 0xffffff))));
+            } else {
+                stack.plot(new PointPlot(orientedf).colored(Color.BLACK));
             }
+                
+                stack.plot(new LinePlot(orientedf, orientedt).colored(vertex.color));
+            
         }
     }
     
