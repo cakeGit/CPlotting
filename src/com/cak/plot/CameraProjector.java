@@ -1,10 +1,16 @@
 package com.cak.plot;
 
+import com.cak.demo.Quaternion;
+
 public class CameraProjector {
     
-    final float scale = 10;
+    final float scale = 3;
     
     Plotting parent;
+    
+    public boolean orthro = false;
+    public Quaternion displayRotation = new Quaternion(0, 0, 0);
+    
     
     public CameraProjector(Plotting parent) {
         this.parent = parent;
@@ -27,18 +33,20 @@ public class CameraProjector {
      * Return the screen position, with z being the depth
      * */
     public Vector3f orient(float x, float y, float z) {
-        return new Vector3f(
-            x - z,
-            -y + ((x + z) / 2),
-            -y + (x + z)/2
-        );
+        Vector3f rotated = rotate(x, y, z);
+        
+//        float perspective = (100 - rotated.z())/50;
+        float perspective = (orthro ? 1f : (200+rotated.z())/100);
+        return rotated.mul(new Vector3f(perspective, perspective, perspective));
+        
+//        return rotated;
+//        float perspectiveDepth = ((1000-rotated.z()) / 10);
+//        return rotated.mul(new Vector3f(perspectiveDepth, perspectiveDepth, 1f));
     }
     
-    /**
-     * Used for sorting objects so that closest draws first
-     * */
-    public float getDepth(float x, float y, float z) {
-        return z;
+    public Vector3f rotate(float x, float y, float z) {
+        return displayRotation.rotate(new Vector3f(x, y, z));
     }
+    
     
 }

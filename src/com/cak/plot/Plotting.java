@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,15 +20,17 @@ public class Plotting extends JFrame {
     Vector3f.Axis gridPlane = Vector3f.Axis.Y;
     
     Set<Plotter> plotters = new HashSet<>();
+    Set<Runnable> tickListeners = new HashSet<>();
     
     //Create a reference so that keys currently being pressed can be tracked
-    PlottingKeyListener keyListener = new PlottingKeyListener();
-    CameraProjector projector = new CameraProjector(this);
+    public final PlottingKeyListener keyListener = new PlottingKeyListener();
+    public final CameraProjector projector = new CameraProjector(this);
     
     BufferStrategy strategy;
     
     Timer renderTimer = new Timer(1000 / 25, e -> {
         time += 1000f / 25;
+        tickListeners.forEach(Runnable::run);
         Graphics g = strategy.getDrawGraphics();
         this.paint(g);
         strategy.show();
@@ -119,6 +122,10 @@ public class Plotting extends JFrame {
     
     public void addPlotter(Plotter plotter) {
         plotters.add(plotter);
+    }
+    
+    public void addTickListener(Runnable listener) {
+        tickListeners.add(listener);
     }
     
 }

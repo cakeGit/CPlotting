@@ -14,11 +14,11 @@ public class Line {
         this.t = t;
     }
     
-    public Vector3f getF() {
+    public Vector3f getFrom() {
         return f;
     }
     
-    public Vector3f getT() {
+    public Vector3f getTo() {
         return t;
     }
     

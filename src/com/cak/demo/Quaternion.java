@@ -97,6 +97,10 @@ public class Quaternion {
         return new Vector3f(a, b, c);
     }
     
+    public Vector3f rotate(Vector3f t) {
+        return this.rotate(Quaternion.ofCartesian(t)).toCartesian();
+    }
+    
     @Override
     public String toString() {
         return w + " + " + a + "i + " + b + "j + " + c + "k";
@@ -116,6 +120,11 @@ public class Quaternion {
     
     public float getC() {
         return c;
+    }
+    
+    public Quaternion rotate(Vector3f.Axis axis, float i) {
+        Vector3f rotation = axis.getNormal().scale((float) Math.sin(Math.toRadians(i / 2f)));
+        return this.multiply(new Quaternion(rotation.x(), rotation.y(), rotation.z()));
     }
     
 }

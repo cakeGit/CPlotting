@@ -38,6 +38,10 @@ public record Vector3f(float x, float y, float z) implements ProjectableVector {
             this.normal = normal;
         }
         
+        public Vector3f getNormal() {
+            return normal;
+        }
+        
         public Axis getPrimaryPlaneAxis() {
             return switch (this) {
                 case X -> Y;
