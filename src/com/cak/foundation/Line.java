@@ -1,4 +1,4 @@
-package com.cak.shitatp;
+package com.cak.foundation;
 
 import com.cak.plot.Vector3f;
 

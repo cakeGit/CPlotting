@@ -2,7 +2,7 @@ import com.cak.demo.Quaternion;
 import com.cak.plot.*;
 import com.cak.plot.plotabbles.LinePlot;
 import com.cak.plot.plotabbles.PointPlot;
-import com.cak.shitatp.Line;
+import com.cak.foundation.Line;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -110,7 +110,7 @@ public class Main {
             Vector3f orientedFrom = rotation.rotate(vertex.getFrom());
             Vector3f orientedTo = rotation.rotate(vertex.getTo());
             
-            stack.plot(new PointPlot(orientedFrom).colored(Color.GRAY));
+            stack.plot(new PointPlot(orientedFrom).colored(Color.RED));
             stack.plot(new LinePlot(orientedFrom, orientedTo).colored(vertex.color));
         }
     }
